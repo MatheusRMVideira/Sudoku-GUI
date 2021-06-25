@@ -4,20 +4,25 @@
 #include <iostream>
 #include "Pilha.h"
 
+Node::Node(){
+	valor = 0;
+	prox = NULL;
+}
 
-Pilha::Pilha() {
+//Construtor
+Pilha::Pilha() { 
 	topo = NULL;
 };
 
-
-void Pilha::empilha(int x) { //Adiciona um nó entre a Cabeça e o próximo nó (Push)
+//Adiciona um nó entre a Cabeça e o próximo nó (Push)
+void Pilha::empilha(int x) { 
 	Node* novo = new Node;
 	novo->valor = x;
 	novo->prox = topo;
 	topo = novo;
 }
-
-int Pilha::desempilha() { //Remove o nó logo após a Cabeça, retorna o valor dele (Pop)
+//Remove o nó logo após a Cabeça, retorna o valor dele (Pop)
+int Pilha::desempilha() { 
 	Node* aux;
 	int x;
 	if (vazia()) {
@@ -30,10 +35,11 @@ int Pilha::desempilha() { //Remove o nó logo após a Cabeça, retorna o valor dele
 	return x;
 }
 
-bool Pilha::vazia() { //Verifica se a Pilha está vazia (Cabeça aponta para NULL), retorna valor Booleano
+//Verifica se a Pilha está vazia (Cabeça aponta para NULL), retorna valor Booleano
+bool Pilha::vazia() { 
 	return topo == NULL;
 }
-
+//Destrutor, destroi todos os elementos da pilha
 Pilha::~Pilha() {
 	Node* aux;
 	while (!vazia()) {

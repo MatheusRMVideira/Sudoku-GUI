@@ -114,13 +114,16 @@
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <Optimization>Disabled</Optimization>
-      <WholeProgramOptimization>false</WholeProgramOptimization>
     </ClCompile>
     <Link />
     <Link />
-    <Link>
-      <SubSystem>Console</SubSystem>
-    </Link>
+    <Link />
+    <ProjectReference>
+      <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
+    </ProjectReference>
+    <Link />
+    <Link />
+    <Link />
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -140,13 +143,16 @@
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <Optimization>Disabled</Optimization>
-      <WholeProgramOptimization>false</WholeProgramOptimization>
     </ClCompile>
     <Link />
     <Link />
-    <Link>
-      <SubSystem>Console</SubSystem>
-    </Link>
+    <Link />
+    <ProjectReference>
+      <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
+    </ProjectReference>
+    <Link />
+    <Link />
+    <Link />
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="funcoesAux.cpp" />

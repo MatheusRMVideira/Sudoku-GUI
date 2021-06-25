@@ -3,7 +3,6 @@
 	Matheus Rezende Milani Videira
 */
 
-#include <iostream>
 #include <stdlib.h>
 #include <sstream>
 #include <string>
@@ -18,9 +17,8 @@
 #include "menuItem.cpp"
 #include "funcoesAux.h"
 
-int pegaEntrada(ALLEGRO_EVENT pointer, MenuLista* lista);
-
 int main(int argc, char** argv) {
+	//Inicializacao do Allegro
 	al_init();
 	al_init_primitives_addon();
 	al_init_font_addon();
@@ -28,6 +26,7 @@ int main(int argc, char** argv) {
 	al_install_mouse();
 	al_install_keyboard();
 
+	//Inicializa todos os recursos necessarios do Allegro
 	ALLEGRO_DISPLAY* tela = NULL;
 	ALLEGRO_EVENT_QUEUE* filaDeEvento = NULL;
 	ALLEGRO_EVENT evento;
@@ -35,32 +34,41 @@ int main(int argc, char** argv) {
 	al_set_window_title(tela, "Sudoku");
 	filaDeEvento = al_create_event_queue();
 
-	//al_register_event_source(filaDeEvento, al_get_display_event_source(tela));
+	//Registra as fontes de evento para captura de cliques e das operacoes com a janela (fechar)
 	al_register_event_source(filaDeEvento, al_get_mouse_event_source());
-	
+	al_register_event_source(filaDeEvento, al_get_display_event_source(tela));
+
+
+	//Carrega a fonte no memsmo diretorio que o programa
+	//Caso o SO seja windows e ele nao encontre a fonte padrao,
+	//carrega a fonte Arial disponivel no sistema
 	ALLEGRO_FONT* fonte = al_load_font("Ubuntu-Regular.ttf", 30, NULL);
+	ALLEGRO_FONT* fonte2 = al_load_font("Ubuntu-Regular.ttf", 12, NULL);
 	if (!fonte) {
-		#if defined(__linux__)
-			al_show_native_message_box(tela, "Erro ao carregaor fonte", "Nao foi possivel carregar a fonte",
-				                       "Baixe a fonte Ubuntu-regular em https://fonts.google.com/specimen/Ubuntu e extraia no mesmo diretorio deste programa",
-										NULL, ALLEGRO_MESSAGEBOX_ERROR);
+#if defined(_WIN32)
+		std::string pathDir = "/Fonts/arial.ttf";
+		fonte = al_load_font(strcat(getenv("windir"), pathDir.c_str()), 30, NULL);
+		fonte2 = al_load_font(strcat(getenv("windir"), pathDir.c_str()), 12, NULL);
+#endif
+		if (!fonte) {
+			al_show_native_message_box(tela, "Erro ao carregar fonte", "Nao foi possivel carregar a fonte",
+				"Baixe a fonte Ubuntu-regular em https://fonts.google.com/specimen/Ubuntu e extraia no mesmo diretorio deste programa",
+				NULL, ALLEGRO_MESSAGEBOX_ERROR);
+			al_destroy_font(fonte);
+			al_destroy_font(fonte2);
+			al_destroy_event_queue(filaDeEvento);
+			al_destroy_display(tela);
 			return 0;
-		#elif defined(_WIN32)
-			std::string pathDir = "/Fonts/arial.ttf";
-			fonte = al_load_font(strcat(getenv("windir"), pathDir.c_str()), 30, NULL);
-			if (!fonte) {
-				al_show_native_message_box(tela, "Erro ao carregaor fonte", "Nao foi possivel carregar a fonte",
-					"Baixe a fonte Ubuntu-regular em https://fonts.google.com/specimen/Ubuntu e extraia no mesmo diretorio deste programa",
-					NULL, ALLEGRO_MESSAGEBOX_ERROR);
-				return 0;
-			}
-		#endif
+		}
 	}
-	Tabuleiro* jogo = new Tabuleiro();
+
+
+	//Inicializa o jogo e o menu
+	Tabuleiro jogo;
 	MenuLista* menu = new MenuLista();
 
-	jogo->geraTabuleiro(tela, fonte);
-	menu->insere(new MenuPadrao); //Usado para prevenir execucao de ponteiro NULL
+	jogo.geraTabuleiro(tela, fonte); //Gera o tabuleiro
+
 	menu->insere(new MenuNovoJogo); //Cria um novo jogo
 	menu->insere(new MenuInserir); //Insere o numero em um quadrado
 	menu->insere(new MenuAnota); //Anota numeros em um quadrado
@@ -72,42 +80,45 @@ int main(int argc, char** argv) {
 	menu->insere(new MenuSair); //Termina a execucao do programa
 
 
-	int entrada;
-
+	int entrada; //Captura o botao que foi clicado
+	bool fechar; //Captura se o usuario deseja fechar o programa
 	while (true) {
+		fechar = false;
+		//Imprime o menu principal
 		al_clear_to_color(al_map_rgb(230, 230, 230));
-		jogo->imprime(tela, fonte);
+		jogo.imprime(tela, fonte, fonte2);
 		menu->imprime(tela, fonte);
 		al_flip_display();
+		//Espera uma entrada o usuario
 		al_flush_event_queue(filaDeEvento);
 		do {
 			al_wait_for_event(filaDeEvento, &evento);
-		} while (evento.type != ALLEGRO_EVENT_MOUSE_BUTTON_DOWN && 
-				 evento.type != ALLEGRO_EVENT_DISPLAY_SWITCH_IN &&
-				 evento.type != ALLEGRO_EVENT_DISPLAY_FOUND &&
-				 evento.type != ALLEGRO_EVENT_DISPLAY_CLOSE);
+		} while (evento.type != ALLEGRO_EVENT_MOUSE_BUTTON_DOWN && //Usuario clicou
+			evento.type != ALLEGRO_EVENT_DISPLAY_SWITCH_IN && //Usuario voltou a janela do programa
+			evento.type != ALLEGRO_EVENT_DISPLAY_CLOSE); //Usuario fechou a janela do programa
+		
+		//Caso o usuario tenha clicado, captura o botao e executa o codigo dele
 		if (evento.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) {
-			entrada = pegaEntrada(evento, menu) + 1;
-			menu->get(entrada)->comportamento(jogo, tela, fonte);
+			entrada = clicouBotao(evento); //retorna o indice do botao, -1 caso nao tenha sido nenhum
+			if (entrada != -1) {
+				menu->get(entrada)->comportamento(&jogo, tela, fonte, fonte2, &fechar); //executa o codigo correspondente ao botao clicado
+			}
 		}
-		if (evento.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
-			delete jogo;
-			delete menu;
-			al_destroy_event_queue(filaDeEvento);
-			al_destroy_font(fonte);
-			al_destroy_display(tela);
-			return 0;
+		//Caso o usuario tenha clicado no botao de saida, ou tenha clicado no botao para fechar a janela
+		if (evento.type == ALLEGRO_EVENT_DISPLAY_CLOSE || clicouBotao(evento) == 8 || fechar) {
+			//Exibe mensagem de alerta confirmando a saida do programa
+			int x = al_show_native_message_box(tela, "Sair", "Deseja sair do programa?", NULL, NULL, ALLEGRO_MESSAGEBOX_YES_NO);
+			//Caso o usuario deseje sair, finaliza o programa
+			if (x == 1) {
+				delete menu;
+				al_destroy_font(fonte);
+				al_destroy_font(fonte2);
+				al_destroy_display(tela);
+				al_destroy_event_queue(filaDeEvento);
+				al_uninstall_system();
+				return 0;
+			}
 		}
 	}
 }
 
-int pegaEntrada(ALLEGRO_EVENT pointer, MenuLista* lista) {
-	int i;
-	int total = lista->total();
-	for (i = 0; i < total; i++) {
-		if (clicouRegiao(475, i * 40, 675, i * 40 + 35, pointer)) {
-			return i;
-		}
-	}
-	return -1;
-}

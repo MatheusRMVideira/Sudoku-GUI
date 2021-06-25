@@ -22,10 +22,12 @@ private:
 public:
 	Lista(); //Construtor
 	Lista* get(int x); //Retorna ponteiro para o noh desejado de acordo com a sua chave
-	void insere(int x); //Insere um noh a lista
-	void retira(int x); //Retira um elemento da lista
+	bool insere(int x); //Insere um noh a lista
+	void apaga(int x); //Retira um elemento da lista
 	bool naLista(int x); //Retorna se uma chave esta ou nao na lsita
 	bool vazia(); //Retorna se a lista esta vazia ou nao
 	int quantElemento(); //Retorna a quantidade de elemento na lista
+	std::string paraString();
+	~Lista();
 };
 #endif

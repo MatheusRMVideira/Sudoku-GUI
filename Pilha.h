@@ -6,6 +6,8 @@ private:
 	int valor;
 	Node* prox;
 	friend class Pilha;
+public:
+	Node();
 };
 
 class Pilha {
