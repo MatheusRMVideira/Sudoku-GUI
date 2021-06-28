@@ -1,0 +1,43 @@
+# Project: Project1
+# Makefile created by Dev-C++ 5.11
+
+CPP      = g++.exe
+CC       = gcc.exe
+WINDRES  = windres.exe
+OBJ      = ../funcoesAux.o ../Lista.o ../menuItem.o ../Pilha.o ../Sudoku.o ../tabuleiro.o
+LINKOBJ  = ../funcoesAux.o ../Lista.o ../menuItem.o ../Pilha.o ../Sudoku.o ../tabuleiro.o
+LIBS     = -L"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib" -L"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/lib" -L"C:/Users/Videira/Desktop/Sudoku/Sudoku/packages/Allegro.5.2.7/build/native/v142/x64/lib" -static-libgcc -allegro_monolith-static
+INCS     = -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include"
+CXXINCS  = -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include/c++" -I"C:/Users/Videira/Desktop/Sudoku/Sudoku/packages/Allegro.5.2.7/build/native/include"
+BIN      = Project1.exe
+CXXFLAGS = $(CXXINCS) 
+CFLAGS   = $(INCS) 
+RM       = rm.exe -f
+
+.PHONY: all all-before all-after clean clean-custom
+
+all: all-before $(BIN) all-after
+
+clean: clean-custom
+	${RM} $(OBJ) $(BIN)
+
+$(BIN): $(OBJ)
+	$(CPP) $(LINKOBJ) -o $(BIN) $(LIBS)
+
+../funcoesAux.o: ../funcoesAux.cpp
+	$(CPP) -c ../funcoesAux.cpp -o ../funcoesAux.o $(CXXFLAGS)
+
+../Lista.o: ../Lista.cpp
+	$(CPP) -c ../Lista.cpp -o ../Lista.o $(CXXFLAGS)
+
+../menuItem.o: ../menuItem.cpp
+	$(CPP) -c ../menuItem.cpp -o ../menuItem.o $(CXXFLAGS)
+
+../Pilha.o: ../Pilha.cpp
+	$(CPP) -c ../Pilha.cpp -o ../Pilha.o $(CXXFLAGS)
+
+../Sudoku.o: ../Sudoku.cpp
+	$(CPP) -c ../Sudoku.cpp -o ../Sudoku.o $(CXXFLAGS)
+
+../tabuleiro.o: ../tabuleiro.cpp
+	$(CPP) -c ../tabuleiro.cpp -o ../tabuleiro.o $(CXXFLAGS)

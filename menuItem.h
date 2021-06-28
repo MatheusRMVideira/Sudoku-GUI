@@ -10,8 +10,8 @@ private:
 	MenuItem* next;
 	friend class MenuLista;
 public:
-	virtual void comportamento(Tabuleiro* tabuleiro, ALLEGRO_DISPLAY* tela, ALLEGRO_FONT* fonte, ALLEGRO_FONT* fonte2, bool* fechar) = 0;
-	virtual char const* titulo() = 0;
+	virtual void comportamento(Tabuleiro* tabuleiro, ALLEGRO_DISPLAY* tela, ALLEGRO_FONT* fonte, ALLEGRO_FONT* fonte2, bool* fechar) = 0; //Comportamento do botao
+	virtual char const* titulo() = 0; //Titulo do botao
 };
 
 #endif

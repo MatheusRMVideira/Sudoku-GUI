@@ -317,8 +317,7 @@ public:
 
 class MenuAnota : public MenuItem {
 	virtual void comportamento(Tabuleiro* jogoAtual, ALLEGRO_DISPLAY* tela, ALLEGRO_FONT* fonte, ALLEGRO_FONT* fonte2, bool* fechar) {
-		int x, y, i, j, valor;
-		bool sair;
+		int x, y, i, j;
 		std::string texto;
 
 		//Inicializa a fila de eventos
@@ -333,7 +332,6 @@ class MenuAnota : public MenuItem {
 		while (true) {
 			//Imprime o display
 			al_clear_to_color(al_map_rgb(230, 230, 230));
-			jogoAtual->imprime(tela, fonte, fonte2);
 			if (x == -1 || y == -1) { //Caso nenhum quadrado esteja selecionado, imprime instrucoes
 				al_draw_text(fonte, al_map_rgb(0, 0, 0), 575, 40, ALLEGRO_ALIGN_CENTRE, "Anotando");
 				al_draw_multiline_text(fonte, al_map_rgb(0, 0, 0), 475, 120, 200, 40, 0, "Clique em um quadrado para ver e editar suas anotacoes");
@@ -350,6 +348,8 @@ class MenuAnota : public MenuItem {
 				al_draw_multiline_text(fonte, al_map_rgb(0, 0, 0), 475, 120, 200, 40, 0, jogoAtual->anotaString(x, y).c_str());
 
 			}
+			//Imprime o tabuleiro
+			jogoAtual->imprime(tela, fonte, fonte2);
 			//Imprime o botao para voltar
 			drawBotao(fonte, "Voltar", 9);
 			//Exibe todas as impressoes no display
@@ -379,7 +379,7 @@ class MenuAnota : public MenuItem {
 				switch (clicouBotao(evento)) {
 				case 7: //Botao adicionar
 					if (x != -1) { //Caso possua um quadrado selecionado
-						while (clicouBotao(evento) != 9) { //Enquanto nao clicar no botao para voltar
+						while (clicouBotao(evento) != 9 || evento.type != ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) { //Enquanto nao clicar no botao para voltar
 							//Imprime display
 							al_clear_to_color(al_map_rgb(230, 230, 230));
 							al_draw_filled_rectangle(x * 50, y * 50, (x + 1) * 50, (y + 1) * 50, al_map_rgb(200, 240, 240));
@@ -389,7 +389,6 @@ class MenuAnota : public MenuItem {
 							al_draw_multiline_text(fonte, al_map_rgb(0, 0, 0), 475, 240, 200, 40, 0, jogoAtual->anotaString(x, y).c_str());
 							drawBotao(fonte, "Voltar", 9);
 							al_flip_display();
-
 							//Espera a entrada de informacoes
 							al_flush_event_queue(filaDeEvento);
 							do {
@@ -424,7 +423,7 @@ class MenuAnota : public MenuItem {
 
 				case 8: //Botao remover
 					if (x != -1) { //Caso possua um quadrado selecionado
-						while (clicouBotao(evento) != 9) { //Enquanto nao clicar no botao para voltar
+						while (clicouBotao(evento) != 9 || evento.type != ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) { //Enquanto nao clicar no botao para voltar
 							//Imprime display
 							al_clear_to_color(al_map_rgb(230, 230, 230));
 							al_draw_filled_rectangle(x * 50, y * 50, (x + 1) * 50, (y + 1) * 50, al_map_rgb(200, 240, 240));

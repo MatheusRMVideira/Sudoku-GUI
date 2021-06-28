@@ -2,7 +2,9 @@
 	Guilherme Calca
 	Matheus Rezende Milani Videira
 */
-
+#if defined (_WIN32)
+#pragma comment(linker, "/SUBSYSTEM:windows /ENTRY:mainCRTStartup")
+#endif
 #include <stdlib.h>
 #include <sstream>
 #include <string>
@@ -46,9 +48,9 @@ int main(int argc, char** argv) {
 	ALLEGRO_FONT* fonte2 = al_load_font("Ubuntu-Regular.ttf", 12, NULL);
 	if (!fonte) {
 #if defined(_WIN32)
+		al_destroy_font(fonte);
 		std::string pathDir = "/Fonts/arial.ttf";
 		fonte = al_load_font(strcat(getenv("windir"), pathDir.c_str()), 30, NULL);
-		fonte2 = al_load_font(strcat(getenv("windir"), pathDir.c_str()), 12, NULL);
 #endif
 		if (!fonte) {
 			al_show_native_message_box(tela, "Erro ao carregar fonte", "Nao foi possivel carregar a fonte",
@@ -61,7 +63,23 @@ int main(int argc, char** argv) {
 			return 0;
 		}
 	}
-
+	if (!fonte2) {
+#if defined(_WIN32)
+		al_destroy_font(fonte2);
+		std::string pathDir = "/Fonts/arial.ttf";
+		fonte2 = al_load_font(strcat(getenv("windir"), pathDir.c_str()), -12, NULL);
+#endif
+		if (!fonte2) {
+			al_show_native_message_box(tela, "Erro ao carregar fonte", "Nao foi possivel carregar a fonte",
+				"Baixe a fonte Ubuntu-regular em https://fonts.google.com/specimen/Ubuntu e extraia no mesmo diretorio deste programa",
+				NULL, ALLEGRO_MESSAGEBOX_ERROR);
+			al_destroy_font(fonte);
+			al_destroy_font(fonte2);
+			al_destroy_event_queue(filaDeEvento);
+			al_destroy_display(tela);
+			return 0;
+		}
+	}
 
 	//Inicializa o jogo e o menu
 	Tabuleiro jogo;

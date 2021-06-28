@@ -172,7 +172,7 @@ int Lista::quantElemento() {
 
 //Converte os elementos da lista para uma string
 //Cada elemento eh separado por um espaço
-//retorna a strig
+//retorna a string
 std::string Lista::paraString() {
 	std::string texto = "";
 	Lista* aux = this->prox;
@@ -186,9 +186,6 @@ std::string Lista::paraString() {
 //Destrutor
 Lista::~Lista() {
 	ch = 0;
-	if (prox != NULL) {
-		delete prox;
-	}
 	prox = NULL;
 }
 #endif

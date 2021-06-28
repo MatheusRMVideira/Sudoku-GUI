@@ -4,6 +4,7 @@
 #include <iostream>
 #include "Pilha.h"
 
+//Constructor
 Node::Node(){
 	valor = 0;
 	prox = NULL;
@@ -14,14 +15,14 @@ Pilha::Pilha() {
 	topo = NULL;
 };
 
-//Adiciona um nó entre a Cabeça e o próximo nó (Push)
+//Adiciona um nó entre a Cabeça e o próximo noh (Push)
 void Pilha::empilha(int x) { 
 	Node* novo = new Node;
 	novo->valor = x;
 	novo->prox = topo;
 	topo = novo;
 }
-//Remove o nó logo após a Cabeça, retorna o valor dele (Pop)
+//Remove o noh logo apos a Cabeça, retorna o valor dele (Pop)
 int Pilha::desempilha() { 
 	Node* aux;
 	int x;
@@ -35,7 +36,7 @@ int Pilha::desempilha() {
 	return x;
 }
 
-//Verifica se a Pilha está vazia (Cabeça aponta para NULL), retorna valor Booleano
+//Retorna se a pilha esta vazia
 bool Pilha::vazia() { 
 	return topo == NULL;
 }

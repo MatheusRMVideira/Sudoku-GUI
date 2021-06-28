@@ -27,7 +27,7 @@ public:
 	bool naLista(int x); //Retorna se uma chave esta ou nao na lsita
 	bool vazia(); //Retorna se a lista esta vazia ou nao
 	int quantElemento(); //Retorna a quantidade de elemento na lista
-	std::string paraString();
-	~Lista();
+	std::string paraString(); //Retorna uma string contendo os valores da lista
+	~Lista(); //Destructor
 };
 #endif
